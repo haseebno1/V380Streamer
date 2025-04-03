@@ -41,7 +41,9 @@ const formSchema = insertCameraSchema.extend({
     .min(7, { message: "RTSP URL is required" })
     .refine(val => val.startsWith("rtsp://"), {
       message: "URL must start with rtsp://"
-    }),
+    })
+    // We don't enforce more strict validation as different camera models have different URL formats
+    // For V380 Pro, the format is typically: rtsp://username:password@IP_address/live/ch00_1
 });
 
 interface AddCameraDialogProps {
@@ -57,9 +59,9 @@ export default function AddCameraDialog({ open, onOpenChange }: AddCameraDialogP
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      rtspUrl: "rtsp://",
-      username: "admin",
-      password: "",
+      rtspUrl: "rtsp://user:password@IP_ADDRESS/live/ch00_1",
+      username: "user",
+      password: "password",
       streamQuality: "medium",
       autoConnect: true,
       autoRecord: false
@@ -70,7 +72,7 @@ export default function AddCameraDialog({ open, onOpenChange }: AddCameraDialogP
     setIsSubmitting(true);
     
     try {
-      await apiRequest("POST", "/api/cameras", data);
+      await apiRequest("/api/cameras", { method: "POST" }, data);
       
       queryClient.invalidateQueries({ queryKey: ['/api/cameras'] });
       
