@@ -37,7 +37,11 @@ import { Camera } from "lucide-react";
 // Extended schema with validation
 const formSchema = insertCameraSchema.extend({
   name: z.string().min(2, { message: "Camera name must be at least 2 characters." }),
-  rtspUrl: z.string().url({ message: "Must be a valid URL starting with rtsp://" }).startsWith("rtsp://"),
+  rtspUrl: z.string()
+    .min(7, { message: "RTSP URL is required" })
+    .refine(val => val.startsWith("rtsp://"), {
+      message: "URL must start with rtsp://"
+    }),
 });
 
 interface AddCameraDialogProps {
@@ -127,13 +131,13 @@ export default function AddCameraDialog({ open, onOpenChange }: AddCameraDialogP
                   <FormLabel>RTSP URL</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="rtsp://192.168.1.xxx:554/stream1" 
+                      placeholder="rtsp://user:pass@192.168.1.xxx/live/ch00_1" 
                       className="font-mono text-sm"
                       {...field} 
                     />
                   </FormControl>
                   <FormDescription className="text-xs">
-                    Standard format for V380 Pro: rtsp://[IP]:[PORT]/stream1
+                    Standard format for V380 Pro: rtsp://username:password@IP_address/live/ch00_1
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
