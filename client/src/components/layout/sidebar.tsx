@@ -4,6 +4,7 @@ import {
   LayoutDashboard, 
   Video, 
   FolderArchive, 
+  Bell,
   Settings,
   User
 } from "lucide-react";
@@ -20,6 +21,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     { name: "Dashboard", href: "/", icon: LayoutDashboard, current: location === "/" },
     { name: "Live Streams", href: "/live-streams", icon: Video, current: location === "/live-streams" },
     { name: "Recordings", href: "/recordings", icon: FolderArchive, current: location === "/recordings" },
+    { name: "Alerts", href: "/alerts", icon: Bell, current: location === "/alerts" },
     { name: "Settings", href: "/settings", icon: Settings, current: location === "/settings" }
   ];
 

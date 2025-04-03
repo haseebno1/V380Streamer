@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import LiveStreams from "@/pages/live-streams";
 import Recordings from "@/pages/recordings";
+import Alerts from "@/pages/alerts";
 import Settings from "@/pages/settings";
 import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
@@ -28,6 +29,7 @@ function Router() {
             <Route path="/" component={Dashboard} />
             <Route path="/live-streams" component={LiveStreams} />
             <Route path="/recordings" component={Recordings} />
+            <Route path="/alerts" component={Alerts} />
             <Route path="/settings" component={Settings} />
             <Route component={NotFound} />
           </Switch>
