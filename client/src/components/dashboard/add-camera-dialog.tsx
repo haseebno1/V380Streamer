@@ -72,7 +72,7 @@ export default function AddCameraDialog({ open, onOpenChange }: AddCameraDialogP
     setIsSubmitting(true);
     
     try {
-      await apiRequest("/api/cameras", { method: "POST" }, data);
+      await apiRequest("POST", "/api/cameras", data);
       
       queryClient.invalidateQueries({ queryKey: ['/api/cameras'] });
       

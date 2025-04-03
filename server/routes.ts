@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { cameraController } from "./controllers/cameraController";
 import { recordingController } from "./controllers/recordingController";
 import { alertController } from "./controllers/alertController";
-import { insertCameraSchema, insertRecordingSchema, insertAlertSchema } from "@shared/schema";
+import { insertCameraSchema, insertRecordingSchema, insertAlertSchema, getResolution } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -273,7 +273,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Stream related endpoints can be added here
+  // Stream related endpoints
+  app.post("/api/stream/connect", async (req, res) => {
+    try {
+      const { url, username, password, quality } = req.body;
+      
+      if (!url) {
+        return res.status(400).json({ error: "RTSP URL is required" });
+      }
+      
+      // In a real implementation, this would connect to the actual RTSP stream
+      // For demo purposes, we're simulating a successful connection
+      const resolution = getResolution(quality || "medium");
+      
+      // Simulate a brief delay for connection
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      res.json({ 
+        connected: true,
+        streamId: Math.floor(Math.random() * 10000),
+        resolution
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to connect to stream" });
+    }
+  });
+  
+  app.get("/api/stream", async (req, res) => {
+    try {
+      const { url, username, password, quality } = req.query;
+      
+      if (!url) {
+        return res.status(400).json({ error: "RTSP URL is required" });
+      }
+      
+      // In a real implementation, this would fetch frames from the RTSP stream
+      // and convert them to HLS or another web-compatible format
+      // For demo purposes, we're returning a simulated response
+      
+      // Simulate a brief delay
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // In a real implementation, we would stream video data here
+      // For demo purposes, we're returning a placeholder
+      res.json({ 
+        stream: true,
+        message: "Stream data would be sent here in a real implementation"
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to stream video" });
+    }
+  });
+  
+  app.get("/api/recordings/:id/play", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const recording = await recordingController.getRecording(id);
+      
+      if (!recording) {
+        return res.status(404).json({ error: "Recording not found" });
+      }
+      
+      // In a real implementation, this would stream the recording file
+      // For demo purposes, we're returning the recording data
+      res.json({ 
+        recording,
+        message: "Recording playback would be implemented here in production"
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to play recording" });
+    }
+  });
+  
+  app.get("/api/recordings/:id/download", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const recording = await recordingController.getRecording(id);
+      
+      if (!recording) {
+        return res.status(404).json({ error: "Recording not found" });
+      }
+      
+      // In a real implementation, this would send the recording file
+      // For demo purposes, we're simulating a download
+      res.json({ 
+        download: true,
+        recording,
+        message: "Recording download would be implemented here in production"
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to download recording" });
+    }
+  });
   
   return httpServer;
 }

@@ -53,16 +53,14 @@ export default function Alerts() {
       if (read !== undefined) {
         url.searchParams.append("read", String(read));
       }
-      return apiRequest(url.toString());
+      return apiRequest('GET', url.toString());
     }
   });
   
   // Mark a single alert as read
   const markAsReadMutation = useMutation({
     mutationFn: async (alertId: number) => {
-      return apiRequest(`/api/alerts/${alertId}/read`, {
-        method: "PUT"
-      } as RequestInit);
+      return apiRequest('PUT', `/api/alerts/${alertId}/read`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
@@ -83,9 +81,7 @@ export default function Alerts() {
   // Mark all alerts as read
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest("/api/alerts/mark-all-read", {
-        method: "PUT"
-      } as RequestInit);
+      return apiRequest('PUT', "/api/alerts/mark-all-read");
     },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
@@ -106,9 +102,7 @@ export default function Alerts() {
   // Delete an alert
   const deleteAlertMutation = useMutation({
     mutationFn: async (alertId: number) => {
-      return apiRequest(`/api/alerts/${alertId}`, {
-        method: "DELETE"
-      } as RequestInit);
+      return apiRequest('DELETE', `/api/alerts/${alertId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
